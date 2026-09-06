@@ -1,0 +1,32 @@
+﻿# Generated build and local output
+/build/
+/build-*/
+/out/
+/stage/
+/test-output/
+CMakeUserPresets.json
+
+# Compiler and linker output
+*.obj
+*.o
+*.dll
+*.exe
+*.lib
+*.exp
+*.pdb
+*.ilk
+
+# Local configuration and game content
+/modloader.ini
+/sku_config*.txt
+/mods/
+*.pkg
+*.log
+
+# Editor and OS files
+.vs/
+.vscode/
+*.user
+*.suo
+Thumbs.db
+.DS_Store
