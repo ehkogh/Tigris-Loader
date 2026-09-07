@@ -7,16 +7,17 @@ game_logs=1
 game_verbosity=0
 
 [sku]
-; Enable only when replacing sku_config.txt with edited plaintext or the tool's
-; headerless encrypted output. Leave off for an original signed retail file.
-allow_unsigned=0
+; Accept plaintext and headerless encrypted configs (required for auto_decrypt).
+allow_unsigned=1
+; Convert encrypted sku_config.txt beside Destiny2.exe to editable plaintext.
+; Preserve the encrypted original as sku_config.txt.encrypted.bak.
+; To keep a signed retail file unchanged, set both SKU options to 0.
+auto_decrypt=1
 
 [steam]
 original_dll=steam_api64_original.dll
 
 [server]
-; The signon URL itself lives in plaintext sku_config.txt and its scheme is authoritative:
-; http:// uses plaintext HTTP; https:// uses TLS.
 ; Remove only the Client's private in-memory CA bundle so ordinary HTTPS certificates work.
 remove_pinning=1
 ; Development-only: also disable HTTPS peer/hostname verification for self-signed certificates.

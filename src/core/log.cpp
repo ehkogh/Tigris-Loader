@@ -166,8 +166,8 @@ void initialize() noexcept {
         path.push_back(L'\\');
     }
     path.append(L"d2_mod_loader.log");
-    g_file = CreateFileW(path.c_str(), FILE_APPEND_DATA, FILE_SHARE_READ | FILE_SHARE_WRITE,
-                         nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+    g_file = CreateFileW(path.c_str(), GENERIC_WRITE, FILE_SHARE_READ,
+                         nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
     const bool fileFailed = g_file == INVALID_HANDLE_VALUE;
     const auto config = runtime::configuration_path();
     const bool showConsole = GetPrivateProfileIntW(L"logging", L"console", 1, config.c_str()) != 0;
@@ -177,7 +177,7 @@ void initialize() noexcept {
         g_console = CreateFileW(L"CONOUT$", GENERIC_READ | GENERIC_WRITE,
                                 FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, 0, nullptr);
         if (g_ownsConsole) {
-            SetConsoleTitleW(L"D2 Mod Loader | Tiger / Destiny 2 Logs");
+            SetConsoleTitleW(L"Destiny 2 | TigrisLoader");
             (void)SetConsoleCtrlHandler(console_control, TRUE);
             if (const HWND window = GetConsoleWindow()) {
                 if (const HMENU menu = GetSystemMenu(window, FALSE)) {

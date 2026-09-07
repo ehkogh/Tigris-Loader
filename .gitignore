@@ -19,6 +19,8 @@ CMakeUserPresets.json
 # Local configuration and game content
 /modloader.ini
 /sku_config*.txt
+/sku_config*.txt.encrypted.bak
+/sku_config*.txt.decrypting
 /mods/
 *.pkg
 *.log

@@ -1,0 +1,34 @@
+name: Bug report
+description: Report a loader, configuration, or build problem.
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Loader version or commit
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Game build and Windows version
+      description: Include the compiler and CMake versions for build failures.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Include relevant INI settings and installed mods.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Attach d2_mod_loader.log from the failing launch before restarting (each launch replaces it). Remove credentials and personal information first.

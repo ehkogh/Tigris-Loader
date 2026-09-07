@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.24)
 
 project(D2ModLoader LANGUAGES C CXX)
 
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS modloader.ini.example)
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/modloader.ini.example" DEFAULT_CONFIG)
+configure_file(src/core/default_config.h.in generated/core/default_config.h @ONLY)
+
 if(NOT WIN32 OR NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
     message(FATAL_ERROR "D2 Mod Loader requires Windows x64")
 endif()
@@ -41,7 +45,7 @@ add_library(d2_mod_loader SHARED
     src/sku/policy.h
 )
 
-target_include_directories(d2_mod_loader PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+target_include_directories(d2_mod_loader PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_BINARY_DIR}/generated")
 target_link_libraries(d2_mod_loader PRIVATE minhook user32)
 
 target_compile_features(d2_mod_loader PRIVATE cxx_std_20)
@@ -62,11 +66,18 @@ set_target_properties(d2_mod_loader PROPERTIES
     PREFIX ""
 )
 
-add_library(sku_codec STATIC src/sku/codec.cpp src/sku/codec.h)
+add_library(sku_codec STATIC src/sku/codec.cpp src/sku/codec.h src/sku/file.cpp src/sku/file.h)
 target_include_directories(sku_codec PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 target_compile_features(sku_codec PUBLIC cxx_std_20)
 target_compile_definitions(sku_codec PRIVATE WIN32_LEAN_AND_MEAN NOMINMAX)
 target_link_libraries(sku_codec PUBLIC bcrypt)
+target_link_libraries(d2_mod_loader PRIVATE sku_codec)
+
+add_custom_command(TARGET d2_mod_loader POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_SOURCE_DIR}/modloader.ini.example"
+        "$<TARGET_FILE_DIR:d2_mod_loader>/modloader.ini.example"
+)
 
 add_executable(sku_config src/sku/main.cpp)
 target_link_libraries(sku_config PRIVATE sku_codec)

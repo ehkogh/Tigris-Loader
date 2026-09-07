@@ -1,0 +1,7 @@
+#pragma once
+
+#include <string_view>
+
+namespace d2mod::runtime {
+inline constexpr std::string_view kDefaultConfig = R"TIGRIS_INI(@DEFAULT_CONFIG@)TIGRIS_INI";
+}

@@ -1,0 +1,38 @@
+name: Windows build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Configure
+        run: cmake -S . -B build -A x64
+      - name: Build
+        run: cmake --build build --config ${{ matrix.configuration }} --parallel
+      - name: Upload binaries and example configuration
+        uses: actions/upload-artifact@v7
+        with:
+          name: TigrisLoader-windows-x64-${{ matrix.configuration }}
+          if-no-files-found: error
+          path: |
+            build/${{ matrix.configuration }}/steam_api64.dll
+            build/${{ matrix.configuration }}/sku_config.exe
+            build/${{ matrix.configuration }}/modloader.ini.example
