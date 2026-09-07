@@ -1,0 +1,49 @@
+name: Tagged release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Configure
+        run: cmake -S . -B build -A x64
+      - name: Build Release
+        run: cmake --build build --config Release --parallel
+      - name: Package Release
+        run: |
+          $files = @(
+            'build/Release/steam_api64.dll'
+            'build/Release/sku_config.exe'
+            'build/Release/modloader.ini.example'
+          )
+          foreach ($file in $files) {
+            if (!(Test-Path -LiteralPath $file -PathType Leaf)) {
+              throw "Missing release file: $file"
+            }
+          }
+          Compress-Archive -LiteralPath $files -DestinationPath TigrisLoader-windows-x64.zip
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$env:RELEASE_TAG" TigrisLoader-windows-x64.zip --verify-tag --generate-notes --title "TigrisLoader $env:RELEASE_TAG"
+          if ($LASTEXITCODE -ne 0) { throw 'GitHub Release publishing failed' }
