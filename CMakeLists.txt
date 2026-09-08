@@ -24,6 +24,8 @@ add_library(d2_mod_loader SHARED
     src/core/dllmain.cpp
     src/steam/backend.cpp
     src/steam/backend.h
+    src/steam/certificate_compat.cpp
+    src/steam/certificate_compat.h
     src/core/log.cpp
     src/core/log.h
     src/mods/mod_catalog.cpp

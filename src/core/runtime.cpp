@@ -18,6 +18,7 @@
 #include "native/game_logging.h"
 #include "sku/policy.h"
 #include "sku/file.h"
+#include "steam/certificate_compat.h"
 
 namespace d2mod::runtime {
 namespace {
@@ -173,6 +174,9 @@ void shutdown() noexcept {
     if (!manifest::trust::uninstall()) {
         log::write("manifest trust restore failed during shutdown");
     }
+    if (!steam::certificate_compat::uninstall()) {
+        log::write("Steam certificate compatibility restore failed during shutdown");
+    }
     if (!packages::trust::uninstall()) {
         log::write("package trust restore failed during shutdown");
     }
@@ -185,6 +189,7 @@ void shutdown() noexcept {
 
 void on_callback_pump() noexcept {
     native::game_logging::update();
+    steam::certificate_compat::update();
     bool expected = false;
     if (g_firstCallbackPump.compare_exchange_strong(expected, true, std::memory_order_acq_rel)) {
         log::write("first Steam callback pump reached; post-unpack activation boundary is live");

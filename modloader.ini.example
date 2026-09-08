@@ -25,6 +25,9 @@ allow_self_signed=0
 ; Optional PKCS#1 DER RSA-2048 public key for custom content manifests.
 ; Relative paths are resolved beside steam_api64.dll. Leave empty for Bungie's retail key.
 manifest_public_key=
+; Preserve stock SteamNetworkingSockets behavior.
+; Leave disabled for retail Bungie services.
+steam_certificate_compat=0
 
 [mods]
 directory=mods
