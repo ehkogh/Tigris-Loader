@@ -40,6 +40,8 @@ add_library(d2_mod_loader SHARED
     src/core/runtime.h
     src/network/tls_policy.cpp
     src/network/tls_policy.h
+    src/network/manifest_trust.cpp
+    src/network/manifest_trust.h
     src/steam/exports.def
     src/sku/policy.cpp
     src/sku/policy.h

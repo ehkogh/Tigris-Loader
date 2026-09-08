@@ -22,6 +22,9 @@ original_dll=steam_api64_original.dll
 remove_pinning=1
 ; Development-only: also disable HTTPS peer/hostname verification for self-signed certificates.
 allow_self_signed=0
+; Optional PKCS#1 DER RSA-2048 public key for custom content manifests.
+; Relative paths are resolved beside steam_api64.dll. Leave empty for Bungie's retail key.
+manifest_public_key=
 
 [mods]
 directory=mods

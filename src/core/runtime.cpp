@@ -13,6 +13,7 @@
 #include "mods/mod_catalog.h"
 #include "mods/package_runtime.h"
 #include "mods/package_trust.h"
+#include "network/manifest_trust.h"
 #include "network/tls_policy.h"
 #include "native/game_logging.h"
 #include "sku/policy.h"
@@ -169,6 +170,9 @@ void shutdown() noexcept {
     if (!tls::uninstall()) {
         log::write("TLS policy restore failed during shutdown");
     }
+    if (!manifest::trust::uninstall()) {
+        log::write("manifest trust restore failed during shutdown");
+    }
     if (!packages::trust::uninstall()) {
         log::write("package trust restore failed during shutdown");
     }
@@ -184,6 +188,9 @@ void on_callback_pump() noexcept {
     bool expected = false;
     if (g_firstCallbackPump.compare_exchange_strong(expected, true, std::memory_order_acq_rel)) {
         log::write("first Steam callback pump reached; post-unpack activation boundary is live");
+        if (!manifest::trust::install()) {
+            log::write("manifest trust unavailable at post-unpack boundary; custom content manifests will not verify");
+        }
         packages::activate_discovered();
     }
 }
